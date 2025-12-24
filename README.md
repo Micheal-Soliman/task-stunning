@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Website Prompt Improver (Hero)
 
-## Getting Started
+Turn a rough website idea into a clear, structured, build‑ready prompt. Clean, fast, and focused on UX. This repo contains a minimal, production‑style hero section with an API endpoint that improves the idea deterministically (no external AI calls).
 
-First, run the development server:
+## Run locally
+
+1) Install dependencies (first time only)
+
+```bash
+npm install
+```
+
+2) Start the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3) Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Product overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Users paste messy ideas into a large textarea.
+- Click "Improve my idea" (or press Ctrl/Cmd+Enter).
+- Server returns a significantly improved prompt with audience, purpose, tone, sections, and features.
+- Smooth reveal, loading state, copy button for fast reuse.
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
+- Frontend: Next.js App Router, `app/page.tsx` (client component) builds the hero.
+- Backend: API route at `app/api/improve/route.ts`.
+- Styling: Tailwind v4 classes via `app/globals.css`.
+- Fonts: Geist via `next/font`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How the improvement works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Deterministic heuristics (no external APIs):
 
-## Deploy on Vercel
+- Extracts signals from the raw text (audience, site type, tone, features).
+- Applies sensible defaults for missing info.
+- Outputs a well‑structured prompt: overview, audience, goals, tone, structure, features, content/CTAs, visuals, and notes.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This keeps the experience fast, predictable, and offline‑friendly. The logic lives in `improveIdea()` in `app/api/improve/route.ts`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Error handling & UX
+
+- Empty input shows an inline error.
+- Loading state in the CTA button with spinner.
+- Result area fades in and scrolls into view.
+- Copy button writes the improved prompt to clipboard (with a fallback).
+
+## Trade‑offs
+
+- Pros: zero external dependencies, instant responses, deterministic output.
+- Cons: heuristics won’t understand complex context like an LLM.
+
+## What I’d improve with more time
+
+- Swap heuristics for a real LLM (with streaming for a typewriter effect).
+- Add presets (SaaS, e‑commerce, portfolio) to guide structure.
+- Enhance copy/format options (Markdown export, section toggles).
+- Basic analytics to learn which sections matter most.
+
